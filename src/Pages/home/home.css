@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto:wght@300&display=swap');
+
+
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+body {
+    margin: 0;
+    color: #fff;
+}
+
+.home {
+    height: 100vh;
+    background-color: #1f2223;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    font-family: 'Roboto', sans-serif;
+}
+
+.container {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border: 1px solid #1f2223;
+    background-color: #222627;
+    border-radius: 12px;
+    width: 65%;
+    height: 80%;
+    display: flex;
+    overflow: hidden;
+}
+
+/* classes below are defined in the jsx files of the particular components! */
+
+
+/* Navbar */
+.sidebar {
+    flex: 1;
+    border-right: 1px solid #016c6f;
+    background-color: #222627;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    background-color: #016c6f;
+    height: 40px;
+    padding: 10px;
+    justify-content: space-between;
+}
+
+.user {
+    display: flex;
+    gap: 10px;
+    font-weight: bold;
+    align-items: center;
+}
+
+.logoleft {
+    font-family: 'Pacifico', cursive;
+    font-size: 20px;
+
+}
+
+.profileimg {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.logout {
+    background-color: #222627;
+    color: #016c6f;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+/* Search */
+
+.search {
+    border-bottom: 2px solid #1f2223;
+}
+
+/* .searchForm {
+
+} */
+
+.userChatImg {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.chat {
+    flex: 2;
+}
