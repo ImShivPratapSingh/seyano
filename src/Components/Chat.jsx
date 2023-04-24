@@ -3,6 +3,7 @@ import call from '../Images/call.png'
 import more from "../Images/more.png";
 import add from "../Images/add.png";
 import Messages from "./Messages";
+import Input from "./Input";
 
 export const Chat = () => {
   return (
@@ -16,6 +17,7 @@ export const Chat = () => {
         </div>
       </div>
       <Messages />
+      <Input/>
     </div>
   );
 }

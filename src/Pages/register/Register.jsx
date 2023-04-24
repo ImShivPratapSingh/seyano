@@ -1,4 +1,5 @@
 import React from 'react'
+import imgup from "./imgup.png";
 import './register.css'
 const Register = () => {
   return (
@@ -27,6 +28,11 @@ const Register = () => {
                 type="password"
                 minLength="6"
               />
+              <input style={{display:"none"}} type="file" id="file"/>
+              <label htmlFor='file'>
+                <img src={imgup} alt=''/>
+                <span>Add an avatar</span>
+              </label>
               <button className="loginButton" type="submit">
                 Sign Up
               </button>
