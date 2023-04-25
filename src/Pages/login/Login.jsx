@@ -1,7 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import "./login.css";
+import { useNavigate, Link } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase";
+
 
 const Login = () => {
+
+  const [err, setErr] = useState(false);
+  const navigate = useNavigate();
+
+  const HandleSubmit = async (e) => {
+    e.preventDefault();
+    const email = e.target[0].value;
+    const password = e.target[1].value;
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/")
+
+    } catch (err) {
+      setErr(true);
+    }
+  };
+
+
   return (
     <div className="login">
       <div className="loginWrapper">
@@ -10,7 +33,7 @@ const Login = () => {
           <span className="loginDesc">Chat all you want !</span>
         </div>
         <div className="loginRight">
-          <form className="loginBox">
+          <form className="loginBoxL" onSubmit={HandleSubmit}>
             <input
               placeholder="Email"
               required
@@ -27,7 +50,10 @@ const Login = () => {
             <button className="loginButton" type="submit">
               Sign in
             </button>
-            <button className="loginRegisterButton">Create an Account</button>
+            <Link to="/register" style={{ marginLeft: "150px" }}>
+              <button className="loginRegisterButton">Create an Account</button>
+            </Link>
+            {err && <span style={{ color: "red" }}>Something went wrong</span>}
           </form>
         </div>
       </div>

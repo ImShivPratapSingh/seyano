@@ -299,13 +299,15 @@ select {
 }
 
 .send {
+    margin-right: 5px;
+    gap: 3px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .send img {
-    padding-right: 10px;
+    padding-right: auto;
     width: 24px;
     height: 24px;
     cursor: pointer;

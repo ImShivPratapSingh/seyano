@@ -1,27 +1,58 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import imgup from "../../Images/imgup.png";
-import './register.css'
-import {createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
+import "./register.css";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, storage, db } from "../../firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const [err, setErr] = useState(false);
+  const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
-    const [err,setErr] = useState(false)
+  const HandleSubmit = async (e) => {
     e.preventDefault();
     const displayName = e.target[0].value;
     const email = e.target[1].value;
     const password = e.target[2].value;
     const file = e.target[3].files[0];
 
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
 
-    try{
-      const res = await createUserWithEmailAndPassword(auth, email, password)
-    } catch(err){
-      setErr(true)
+      const storageRef = ref(storage, displayName);
+
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        (error) => {
+          setErr(true);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+            await updateProfile(res.user, {
+              displayName,
+              photoURL: downloadURL,
+            });
+
+            await setDoc(doc(db, "users", res.user.uid), {
+              uid: res.user.uid,
+              displayName,
+              email,
+              photoURL: downloadURL,
+            });
+
+            await setDoc(doc(db, "usersChat", res.user.uid),{});
+
+            navigate("/");
+          });
+        }
+      );
+    } catch (err) {
+      setErr(true);
     }
-
-  }
+  };
 
   return (
     <div className="login">
@@ -31,7 +62,7 @@ const Register = () => {
           <span className="loginDesc">Chat all you want !</span>
         </div>
         <div className="loginRight">
-          <form className="loginBox">
+          <form className="loginBox" onSubmit={HandleSubmit}>
             <input type="text" placeholder="Username" className="loginInput" />
             <input
               placeholder="Email"
@@ -49,22 +80,20 @@ const Register = () => {
             <input style={{ display: "none" }} type="file" id="file" />
             <label htmlFor="file">
               <img src={imgup} alt="" />
-              <span>Add an avatar</span>
+              <span style={{ color: "gray", cursor:"pointer" }}>Add an avatar</span>
             </label>
-            <button
-              className="loginButton"
-              type="submit"
-              onSubmit={handleSubmit}
-            >
+            <button className="loginButton" type="submit">
               Sign Up
             </button>
-            {err && <span>Something went wrong</span>}
+            {err && <span style={{color:"red"}}>Something went wrong</span>}
+            <Link to="/login" style={{marginLeft:"150px"}}>
             <button className="loginRegisterButton">Log into Account</button>
+            </Link>
           </form>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Register;
