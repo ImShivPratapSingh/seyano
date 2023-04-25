@@ -1,63 +1,41 @@
-import React from 'react'
+import { doc, onSnapshot } from 'firebase/firestore';
+import React, { useContext, useEffect, useState } from 'react'
+import { db } from '../firebase';
+import { AuthContext } from '../Context/AuthContext';
 
 const Chats = () => {
+
+  const [chats,setChats] = useState([])
+
+  const {currentUser} = useContext(AuthContext)
+
+  useEffect(() => {
+    const getChats = () =>{
+      const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
+        setChats(doc.data());
+      });
+    
+
+      return () =>{
+        unsub();
+      }
+    }
+
+    currentUser.uid && getChats()
+  }, [currentUser.uid])
+
+
   return (
     <div className="chats">
-      <div className="userChat">
-        <img
-          className="userChatImg"
-          src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
-          alt=""
-        />
-        <div className="userChatInfo">
-          <span>Jane</span>
-          <p>Hello</p>
+      {Object.entries(chats)?.map((chat) => (
+        <div className="userChat" key={chat[0]}>
+          <img className="userChatImg" src={chat[1].userInfo.photoURL} alt="" />
+          <div className="userChatInfo">
+            <span>{chat[1].userInfo.displayName}</span>
+            <p>{chat[1].userInfo.lastMessage?.text}</p>
+          </div>
         </div>
-      </div>
-      <div className="userChat">
-        <img
-          className="userChatImg"
-          src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
-          alt=""
-        />
-        <div className="userChatInfo">
-          <span>Jane</span>
-          <p>Hello</p>
-        </div>
-      </div>
-      <div className="userChat">
-        <img
-          className="userChatImg"
-          src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
-          alt=""
-        />
-        <div className="userChatInfo">
-          <span>Jane</span>
-          <p>Hello</p>
-        </div>
-      </div>
-      <div className="userChat">
-        <img
-          className="userChatImg"
-          src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
-          alt=""
-        />
-        <div className="userChatInfo">
-          <span>Jane</span>
-          <p>Hello</p>
-        </div>
-      </div>
-      <div className="userChat">
-        <img
-          className="userChatImg"
-          src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
-          alt=""
-        />
-        <div className="userChatInfo">
-          <span>Jane</span>
-          <p>Hello</p>
-        </div>
-      </div>
+      ))}
     </div>
   );
 }

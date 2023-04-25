@@ -129,6 +129,10 @@ select {
     object-fit: cover;
 }
 
+.userChatInfoS{
+    align-items: center;
+}
+
 /* Chats */
 
 .userChatInfo {
