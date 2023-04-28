@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
-import img from "../Images/img.png";
+import imgup from "../Images/img.png";
 import file from "../Images/file.png";
 import send from "../Images/send.png";
 import { ChatContext } from "../Context/ChatContext";
 import { AuthContext } from "../Context/AuthContext";
-import { Timestamp, arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { Timestamp, arrayUnion, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db, storage } from "../firebase";
 import {v4 as uuid} from "uuid"
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
@@ -52,6 +52,23 @@ const Input = () => {
       })
     }
 
+    await updateDoc(doc(db,"userChats",currentUser.uid),{
+      [data.chatId+".lastMessage"]: {
+        text
+      },
+      [data.chatId+".date"]: serverTimestamp()
+    })
+
+    await updateDoc(doc(db, "userChats", data.user.uid), {
+      [data.chatId + ".lastMessage"]: {
+        text,
+      },
+      [data.chatId + ".date"]: serverTimestamp(),
+    });
+
+    setText("");
+    setImg(null);
+
   };
 
   return (
@@ -61,6 +78,7 @@ const Input = () => {
           type="text"
           placeholder="message..."
           onChange={(e) => setText(e.target.value)}
+          value={text}
         />
         <div className="send">
           <img src={file} alt="" />
@@ -71,7 +89,7 @@ const Input = () => {
             onChange={(e) => setImg(e.target.files[0])}
           />
           <label htmlFor="file">
-            <img src={img} alt="" />
+            <img src={imgup} alt="" />
           </label>
           <img src={send} alt="" onClick={HandleSend} />
         </div>
