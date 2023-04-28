@@ -15,6 +15,10 @@ const Input = () => {
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
 
+
+  const HandleKey = (e) => {
+    e.code === "Enter" && HandleSend();
+  };
   const HandleSend = async () => {
 
     if(img){
@@ -77,6 +81,7 @@ const Input = () => {
         <input
           type="text"
           placeholder="message..."
+          onKeyDown={HandleKey}
           onChange={(e) => setText(e.target.value)}
           value={text}
         />
