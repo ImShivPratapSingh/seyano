@@ -2,12 +2,15 @@ import { doc, onSnapshot } from 'firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react'
 import { db } from '../firebase';
 import { AuthContext } from '../Context/AuthContext';
+import { ChatContext } from '../Context/ChatContext';
 
 const Chats = () => {
 
   const [chats,setChats] = useState([])
 
   const {currentUser} = useContext(AuthContext)
+  const { dispatch } = useContext(ChatContext);
+
 
   useEffect(() => {
     const getChats = () =>{
@@ -24,11 +27,14 @@ const Chats = () => {
     currentUser.uid && getChats()
   }, [currentUser.uid])
 
+  const HandleSelect = (u) => {
+    dispatch({type:"CHANGE_USER",payload:u})
+  }
 
   return (
     <div className="chats">
       {Object.entries(chats)?.map((chat) => (
-        <div className="userChat" key={chat[0]}>
+        <div className="userChat" key={chat[0]} onClick={() => HandleSelect(chat[1].userInfo)}>
           <img className="userChatImg" src={chat[1].userInfo.photoURL} alt="" />
           <div className="userChatInfo">
             <span>{chat[1].userInfo.displayName}</span>
